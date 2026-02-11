@@ -31,3 +31,7 @@ Most workflow products handle generic approvals, but autonomous agent systems ne
 - Hybrid circuitry + human silhouette motifs
 - Mission-control operations board aesthetic
 
+
+## New core docs
+- `docs/ARCHITECTURE_TWO_LAYER.md` — AgentCore/Strands substrate vs RelayTrace supervisory plane
+- `specs/AWS_AGENTCORE_STRANDS_ADAPTER_SPEC.md` — adapter contract and HITL payload flow

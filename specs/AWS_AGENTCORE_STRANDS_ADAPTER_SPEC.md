@@ -143,6 +143,18 @@ The adapter supplies a default mapping, overridable per agent:
 - `rerouted` -> continue waiting for final decision
 - `needs_info` -> gather requested evidence and re-submit handoff
 
+### 6.1 Non-blocking decision lanes (required)
+HITL requests must be lane-scoped so agents can continue unrelated work.
+
+Example: if an agent processes 100+ events/hour and ~1% require HITL, only those flagged items should pause. Other events continue through non-blocked lanes.
+
+Required mechanics:
+- `lane_id` on each task/event unit
+- checkpoint state per lane (not global-run freeze)
+- concurrency-safe pause/resume by `lane_id`
+- bounded in-flight HITL queue per lane to avoid backpressure collapse
+- optional per-lane timeout policy (`auto-expire`, `reroute`, or `fallback action`)
+
 ---
 
 ## 7) Prompt/Definition Enrichment Strategy
@@ -174,17 +186,43 @@ Guardrail: keep injected guidance procedural and bounded; avoid exposing private
 
 ---
 
-## 10) MVP Implementation Plan
-1. Python wrapper/decorator package (`relaytrace-strands-adapter`)
-2. Event emitter client (request + audit)
-3. Decision listener client (poll/subscription)
-4. Checkpoint helper contract (S3/ref-based)
-5. Minimal example in `examples/agentcore-wrapper-minimal`
+## 10) Metrics and telemetry (future-state plan, begin in v1)
+
+RelayTrace should emit telemetry events for both runtime and improvement loops.
+
+### 10.1 Core HITL quality metrics
+- `% events requiring HITL` = `handoff.requested / total actionable events`
+- `% approvals` / `% rejections` / `% reroutes` / `% needs_info`
+- decision latency (P50/P95)
+- escalation rate
+- queue depth and stale-request count
+
+### 10.2 Model quality proxy metrics
+- false-positive proxy: high `% rejected` on similar trigger classes
+- false-negative proxy: post-incident/manual findings where HITL should have been raised but was not
+- retry/rework rate after `needs_info`
+
+### 10.3 Persona-separated dashboards
+- **Operator dashboard:** active queues, urgency, decisions, SLA risk
+- **Engineering dashboard:** trigger quality, HITL ratios, policy drift, model/workflow tuning signals
+
+This separation is required because HITL responders and agent engineers are often different teams.
 
 ---
 
-## 11) Open Questions
+## 11) MVP Implementation Plan
+1. Python wrapper/decorator package (`relaytrace-strands-adapter`)
+2. Event emitter client (request + audit)
+3. Decision listener client (poll/subscription)
+4. Checkpoint helper contract (S3/ref-based) with lane-scoped pause/resume
+5. Metrics emitter for HITL + decision outcomes
+6. Minimal example in `examples/agentcore-wrapper-minimal`
+
+---
+
+## 12) Open Questions
 - Should request UUID originate at agent or RelayTrace ingress?
 - Push callbacks vs pull/poll for decision retrieval in constrained networks?
 - Should `rerouted` be terminal to origin agent or transitional state only?
 - How much checkpoint state is embedded vs externally referenced?
+- Which telemetry schema is canonical for cross-team analytics (OTel attrs vs domain-specific event model)?

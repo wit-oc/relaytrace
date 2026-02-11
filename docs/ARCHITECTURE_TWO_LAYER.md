@@ -114,6 +114,14 @@ Suggested subjects/topics:
 - **Platform owner scope**: ecosystem-wide control-plane metadata and event health
 - **Data minimization**: redact or link out sensitive payload sections when required
 
+### Dual-plane views (required)
+1. **Operator View (real-time operations)**
+   - queue/work item triage, SLA timers, decision actions, reroute controls
+2. **Engineering View (quality + tuning)**
+   - HITL invocation rate, approval/rejection split, lane-level bottlenecks, trigger quality trends
+
+These views are intentionally separate because responders and builders are typically different personas.
+
 ---
 
 ## Non-goals (v1)

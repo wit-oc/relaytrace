@@ -76,49 +76,84 @@ Candidate baseline stack for prototype:
 - Workers: containerized Python
 - Policy: start simple rules; optional OPA phase-in
 
-## Competitor matrix (preliminary, evidence-tiered)
+## Competitor matrix (source-hardened, citation-linked)
 
-### Tier 1 — Incumbent enterprise workflow suites (very large scale)
-- ServiceNow
-  - Relevance: strong approvals/routing/escalation in enterprise operations.
-  - Gap vs ACP: not purpose-built as an agent-native supervision contract for autonomous agents.
-  - Scale signal: global Fortune-1000 penetration and broad ITSM footprint.
-- Atlassian (Jira Service Management + workflow stack)
-  - Relevance: strong workflow control and team-level approvals.
-  - Gap vs ACP: agent clarification loop + structured callback to autonomous agents is not core product identity.
-  - Scale signal: very large global customer base across software/IT teams.
-- Microsoft Power Platform / Logic Apps
-  - Relevance: deeply embedded enterprise automation and approvals in Microsoft ecosystems.
-  - Gap vs ACP: agent-native supervision model is possible but not opinionated as a dedicated control plane.
-  - Scale signal: very high enterprise penetration where M365/Azure is standard.
-- Salesforce Flow/Approvals
-  - Relevance: business-process approvals with strong CRM-centric integration.
-  - Gap vs ACP: not centered on cross-agent mission-control and autonomous worker callback contracts.
-  - Scale signal: very large enterprise and mid-market footprint.
+Confidence rubric:
+- **High** = official docs + audited filing/investor reporting support the claim.
+- **Med** = official docs support capability, but scale/adoption signal is marketing-grade or indirect.
+- **Low** = directional signal only (none used below).
 
-### Tier 2 — Process/orchestration and RPA platforms (large scale)
-- UiPath / Automation Anywhere
-  - Relevance: enterprise automation with human-in-the-loop checkpoints.
-  - Gap vs ACP: historically bot/RPA-centric; agent-native governance is evolving but not standardized around multi-agent supervision desks.
-  - Scale signal: large enterprise deployment base and mature partner ecosystems.
-- Camunda
-  - Relevance: robust process orchestration and human task modeling.
-  - Gap vs ACP: provides primitives, but mission-control UX and agent-specific approval contract are typically custom-built.
-  - Scale signal: significant enterprise adoption in process-heavy organizations.
-- Temporal
-  - Relevance: high-reliability workflow orchestration primitives.
-  - Gap vs ACP: developer platform, not out-of-box enterprise approval control-plane UX/policy product.
-  - Scale signal: widely adopted in modern engineering orgs for critical workflows.
+### Tier 1 — Incumbent enterprise workflow suites
 
-### Tier 3 — Agent frameworks / observability ecosystems (emerging-to-growing)
-- LangGraph/LangChain, AutoGen, Semantic Kernel patterns
-  - Relevance: explicit agent construction + optional human-in-the-loop patterns.
-  - Gap vs ACP: no single enterprise-grade, self-hosted approval routing + escalation + mission-control product standard across frameworks.
-  - Scale signal: rapid adoption among AI engineering teams; enterprise standardization still fragmented.
-- Observability/eval tools (e.g., LangSmith/Humanloop/TruLens/Arize-adjacent)
-  - Relevance: quality/trace/eval layers around LLM systems.
-  - Gap vs ACP: typically monitor/evaluate rather than own real-time decision routing/escalation as a supervisor control plane.
-  - Scale signal: growing in production AI stacks, especially in experimentation-to-production transitions.
+- **ServiceNow** — **Confidence: High**
+  - Relevance: enterprise workflow/approval and governance depth is strong.
+  - Gap vs ACP: no default, framework-agnostic agent supervision contract (clarification loop + structured callback) as primary product surface.
+  - Sources:
+    - Workflow/approval capabilities: https://www.servicenow.com/products/enterprise-workflows.html
+    - Scale/adoption signal (customer metrics in annual report / investor materials): https://investors.servicenow.com/
+
+- **Atlassian (Jira Service Management + Jira Automation)** — **Confidence: High**
+  - Relevance: mature team/service workflow approvals and automation primitives.
+  - Gap vs ACP: agent-native mission-control UX and decision-callback contract are not central product abstractions.
+  - Sources:
+    - JSM approvals/workflows: https://support.atlassian.com/jira-service-management-cloud/docs/set-up-approvals/
+    - Customer scale disclosure (annual report/investor): https://investors.atlassian.com/
+
+- **Microsoft Power Automate / Logic Apps** — **Confidence: Med**
+  - Relevance: broad enterprise automation with built-in approvals and connectors.
+  - Gap vs ACP: supports HITL patterns, but not packaged as a dedicated autonomous-agent approval control plane.
+  - Sources:
+    - Power Automate approvals: https://learn.microsoft.com/power-automate/approvals-overview
+    - Logic Apps workflow orchestration: https://learn.microsoft.com/azure/logic-apps/logic-apps-overview
+
+- **Salesforce Flow / Approvals** — **Confidence: Med**
+  - Relevance: strong business-process approvals within CRM-centric estates.
+  - Gap vs ACP: cross-agent supervision + structured agent callback is not the core operating model.
+  - Sources:
+    - Salesforce approvals docs: https://help.salesforce.com/s/articleView?id=sf.approvals_overview.htm&type=5
+    - Flow builder docs: https://help.salesforce.com/s/articleView?id=sf.flow.htm&type=5
+
+### Tier 2 — Process orchestration + RPA
+
+- **UiPath** — **Confidence: High**
+  - Relevance: enterprise automation platform with human-in-the-loop checkpoints and governance tooling.
+  - Gap vs ACP: historically automation/bot-first; agent-native, framework-agnostic supervision desk remains less opinionated.
+  - Sources:
+    - Product capability overview: https://www.uipath.com/product
+    - Adoption/scale disclosures (investor): https://ir.uipath.com/
+
+- **Camunda** — **Confidence: Med**
+  - Relevance: robust BPMN/process orchestration + human tasks.
+  - Gap vs ACP: strong primitives, but mission-control + agent-specific approval contract usually requires custom composition.
+  - Sources:
+    - Platform overview: https://camunda.com/platform/
+    - Human task modeling/docs: https://docs.camunda.io/docs/components/modeler/bpmn/user-tasks/
+
+- **Temporal** — **Confidence: Med**
+  - Relevance: durable workflow orchestration for critical backend processes.
+  - Gap vs ACP: developer orchestration platform, not packaged enterprise approval control plane with policy/escalation UX out-of-box.
+  - Sources:
+    - Platform docs: https://docs.temporal.io/
+    - Core value proposition: https://temporal.io/
+
+### Tier 3 — Agent frameworks / eval-adjacent tools
+
+- **LangGraph / LangChain, AutoGen, Semantic Kernel** — **Confidence: Med**
+  - Relevance: explicit agent-construction ecosystems with optional HITL checkpoints.
+  - Gap vs ACP: no shared, enterprise-standard supervision contract spanning routing/escalation/audit + callback semantics.
+  - Sources:
+    - LangGraph docs: https://langchain-ai.github.io/langgraph/
+    - AutoGen docs: https://microsoft.github.io/autogen/
+    - Semantic Kernel docs: https://learn.microsoft.com/semantic-kernel/
+
+- **LangSmith / Humanloop / TruLens / Arize Phoenix (observability/eval)** — **Confidence: Med**
+  - Relevance: strong tracing, evaluation, quality feedback loops.
+  - Gap vs ACP: typically monitor/evaluate; they do not generally own real-time approval routing/escalation as the supervisor control plane.
+  - Sources:
+    - LangSmith: https://docs.smith.langchain.com/
+    - Humanloop: https://humanloop.com/
+    - TruLens: https://www.trulens.org/
+    - Arize Phoenix: https://phoenix.arize.com/
 
 ## Synthesis: what appears crowded vs open
 Crowded:

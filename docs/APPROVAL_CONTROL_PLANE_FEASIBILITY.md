@@ -179,6 +179,53 @@ Why this wedge can beat buy-vs-build:
 - internal builds usually handle routing, but underinvest in policy quality, escalation correctness, and cross-agent observability.
 - if we package those as defaults (with audit receipts and self-hosted operability), we reduce operational burden enough to justify adoption.
 
+## Final recommendation (locked for execution)
+Recommendation: **Proceed with a narrow, pull/poll-first MVP under the RelayTrace name.**
+
+Locked decisions to preserve through implementation:
+- Product name: **RelayTrace**
+- Supervision mode: **pull/poll-first** (worker polls for decision state; push callbacks are optional later)
+- SLA defaults:
+  - **P1: 1 hour**
+  - **P2: 24 hours**
+  - **P3: 7 days**
+
+Rationale:
+- Pull/poll-first removes the hardest early reliability risks (webhook delivery, idempotency races, callback auth edge cases) while still proving approval-routing value.
+- The SLA ladder creates immediate enterprise-operable behavior (escalation expectations + queue hygiene) without requiring full policy complexity on day 1.
+- RelayTrace can differentiate fastest on governance-grade supervision contract + auditability, not on broad workflow feature parity.
+
+## 30-day execution plan
+
+### Week 1 (Foundation + contract freeze)
+- Freeze v0 `DecisionRequest` / `DecisionState` schema and poll API contract.
+- Implement Postgres-backed request lifecycle (`new -> pending -> approved/rejected/escalated/expired`).
+- Add strict priority classification (P1/P2/P3) with server-calculated due-at based on locked SLA defaults.
+- Ship minimal audit ledger entries for every state transition.
+
+### Week 2 (Supervisor workflow + SLA engine)
+- Build operator queue view sorted by urgency: priority, time-to-breach, age.
+- Implement escalation scheduler for SLA breach transitions and assignment routing.
+- Add clarification loop primitives (`needs_info`, `question`, `response`) in the same request thread.
+- Enforce idempotent poll read semantics for workers.
+
+### Week 3 (Agent integration + hardening)
+- Deliver reference worker client (Python) using pull/poll-first decision retrieval.
+- Add retry-safe polling guidance (backoff + jitter + max staleness budget).
+- Implement auth baseline (service tokens, scoped permissions for poll/read/write).
+- Add metrics + traces: queue depth, SLA-at-risk counts, decision latency percentiles.
+
+### Week 4 (Pilot + proof)
+- Run one constrained pilot flow (security triage or regulated exception adjudication).
+- Capture outcomes: SLA adherence, escalation correctness, clarification turnaround, operator load.
+- Produce go/no-go memo for next phase (push callback beta, policy DSL, broader domain rollout).
+
+## Exit criteria for day 30
+- End-to-end pull/poll-first approval loop working in production-like environment.
+- P1/P2/P3 SLA timers and escalations functioning with audit evidence.
+- At least one real workflow completed with measurable latency + reliability metrics.
+- Clear decision on phase-2 scope with documented risks.
+
 ## Next deliverables
 1) Source-verified matrix with explicit citations + confidence tags (High/Med/Low)
 2) Top-3 wedge options + recommended entry wedge
@@ -187,5 +234,5 @@ Why this wedge can beat buy-vs-build:
 
 ## Notes
 - This file is intentionally token-light and serves as a durable checkpoint.
-- This draft is a **preliminary market pass**; numbers/claims should be citation-hardened before external use.
+- This draft is now updated with a locked execution recommendation and 30-day plan.
 - Source of truth for product intent: `docs/APPROVAL_CONTROL_PLANE_SPEC_SEED.md`.
